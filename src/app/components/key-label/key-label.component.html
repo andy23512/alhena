@@ -1,0 +1,11 @@
+@if (label(); as l) {
+  <svg:text
+    [attr.x]="x()"
+    [attr.y]="y()"
+    dominant-baseline="central"
+    text-anchor="middle"
+    [style.font-size.px]="computedFontSize()"
+    [class.material-symbols-rounded]="l.type === KeyLabelType.Icon"
+    class="fill-current"
+  >{{ l.value }}</svg:text>
+}

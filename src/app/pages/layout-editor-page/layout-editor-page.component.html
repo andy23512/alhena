@@ -1,0 +1,21 @@
+<div class="flex h-screen w-screen flex-col">
+  <div class="flex items-center gap-2 border-b border-gray-300 p-2">
+    <button mat-stroked-button (click)="onExport()">Export JSON</button>
+    <button mat-stroked-button (click)="fileInput.click()">
+      Import JSON
+    </button>
+    <input
+      #fileInput
+      type="file"
+      accept="application/json"
+      class="hidden"
+      (change)="onImportFileSelected($event)"
+    />
+  </div>
+  <div class="min-h-0 flex-1">
+    <app-layout
+      [keyLabelMap]="layoutStore.labels()"
+      (keyClick)="onKeyClick($event)"
+    ></app-layout>
+  </div>
+</div>

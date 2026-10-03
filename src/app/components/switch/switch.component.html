@@ -1,0 +1,28 @@
+@for (sector of sectors; track sector) {
+  <svg:g
+    appSwitchSector
+    [center]="center()"
+    [degree]="sector.degree + r()"
+    [direction]="rotationDirection()"
+    [label]="keyLabelMap()[positionCodeMap()[sector.direction]]"
+    [positionCode]="positionCodeMap()[sector.direction]"
+    [strokeWidth]="strokeWidth()"
+    [fontSize]="fontSize()"
+    (keyClick)="keyClick.emit($event)"
+  ></svg:g>
+}
+<svg:circle
+  class="fill-transparent stroke-current hover:fill-current hover:opacity-10 cursor-pointer transition-opacity"
+  [attr.cx]="center().x"
+  [attr.cy]="center().y"
+  [attr.r]="53.68"
+  [attr.stroke-width]="strokeWidth()"
+  (click)="keyClick.emit(positionCodeMap().c)"
+></svg:circle>
+<svg:g
+  appKeyLabel
+  [x]="center().x"
+  [y]="center().y"
+  [label]="keyLabelMap()[positionCodeMap().c]"
+  [fontSize]="fontSize()"
+></svg:g>

@@ -1,0 +1,13 @@
+<svg:path
+  [attr.d]="sectorPath() + ' Z'"
+  class="fill-transparent stroke-current hover:fill-current hover:opacity-10 cursor-pointer transition-opacity"
+  [attr.stroke-width]="strokeWidth()"
+  (click)="keyClick.emit(positionCode())"
+/>
+<svg:g
+  appKeyLabel
+  [x]="textX()"
+  [y]="textY()"
+  [fontSize]="fontSize()"
+  [label]="label()"
+></svg:g>

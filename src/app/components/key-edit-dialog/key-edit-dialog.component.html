@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Edit key #{{ data.positionCode }}</h2>
+<mat-dialog-content class="flex flex-col gap-4 pt-2">
+  <mat-button-toggle-group
+    [value]="type()"
+    (change)="type.set($event.value)"
+  >
+    <mat-button-toggle [value]="KeyLabelType.Text">Text</mat-button-toggle>
+    <mat-button-toggle [value]="KeyLabelType.Icon">Icon</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>{{
+      type() === KeyLabelType.Icon ? 'Material Symbols icon name' : 'Label text'
+    }}</mat-label>
+    <input
+      matInput
+      [value]="value()"
+      (input)="onValueInput($event)"
+      (keydown.enter)="save()"
+    />
+    @if (type() === KeyLabelType.Icon) {
+      <mat-hint
+        >e.g. "home", see
+        <a href="https://fonts.google.com/icons" target="_blank" rel="noopener"
+          >Material Symbols</a
+        ></mat-hint
+      >
+    }
+  </mat-form-field>
+
+  @if (type() === KeyLabelType.Icon && value()) {
+    <div class="flex items-center justify-center text-4xl">
+      <span class="material-symbols-rounded">{{ value() }}</span>
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="clear()">Clear</button>
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>
