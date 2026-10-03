@@ -1,0 +1,35 @@
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Search Material Symbols icons</mat-label>
+  <input
+    matInput
+    [value]="query()"
+    (input)="onQueryInput($event)"
+    placeholder="e.g. home"
+  />
+</mat-form-field>
+
+@if (loading()) {
+  <p class="text-sm text-gray-500">Loading icons…</p>
+} @else {
+  <div class="grid max-h-48 grid-cols-6 gap-1 overflow-y-auto">
+    @for (name of visibleMatches(); track name) {
+      <button
+        type="button"
+        class="flex flex-col items-center justify-center rounded p-1 hover:bg-gray-200"
+        [class.bg-gray-300]="name === selected()"
+        [title]="name"
+        (click)="choose(name)"
+      >
+        <span class="material-symbols-rounded">{{ name }}</span>
+      </button>
+    }
+  </div>
+  @if (matches().length === 0) {
+    <p class="text-xs text-gray-500">No icons found for "{{ query() }}".</p>
+  } @else if (matches().length > visibleMatches().length) {
+    <p class="text-xs text-gray-500">
+      Showing {{ visibleMatches().length }} of {{ matches().length }} matches
+      — keep typing to narrow it down.
+    </p>
+  }
+}

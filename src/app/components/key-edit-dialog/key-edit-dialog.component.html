@@ -8,30 +8,24 @@
     <mat-button-toggle [value]="KeyLabelType.Icon">Icon</mat-button-toggle>
   </mat-button-toggle-group>
 
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>{{
-      type() === KeyLabelType.Icon ? 'Material Symbols icon name' : 'Label text'
-    }}</mat-label>
-    <input
-      matInput
-      [value]="value()"
-      (input)="onValueInput($event)"
-      (keydown.enter)="save()"
-    />
-    @if (type() === KeyLabelType.Icon) {
-      <mat-hint
-        >e.g. "home", see
-        <a href="https://fonts.google.com/icons" target="_blank" rel="noopener"
-          >Material Symbols</a
-        ></mat-hint
-      >
+  @if (type() === KeyLabelType.Text) {
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Label text</mat-label>
+      <input
+        matInput
+        [value]="value()"
+        (input)="onValueInput($event)"
+        (keydown.enter)="save()"
+      />
+    </mat-form-field>
+  } @else {
+    <app-icon-picker [(selected)]="value"></app-icon-picker>
+    @if (value()) {
+      <div class="flex items-center gap-2 text-sm text-gray-600">
+        <span class="material-symbols-rounded text-3xl">{{ value() }}</span>
+        <span>{{ value() }}</span>
+      </div>
     }
-  </mat-form-field>
-
-  @if (type() === KeyLabelType.Icon && value()) {
-    <div class="flex items-center justify-center text-4xl">
-      <span class="material-symbols-rounded">{{ value() }}</span>
-    </div>
   }
 </mat-dialog-content>
 <mat-dialog-actions align="end">

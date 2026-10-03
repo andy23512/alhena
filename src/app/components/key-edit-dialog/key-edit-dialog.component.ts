@@ -8,6 +8,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IconPickerComponent } from '../icon-picker/icon-picker.component';
 import { KeyLabel, KeyLabelType } from '../../models/key-label.models';
 
 export interface KeyEditDialogData {
@@ -30,6 +31,7 @@ export type KeyEditDialogResult = KeyLabel | null | undefined;
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    IconPickerComponent,
   ],
   templateUrl: './key-edit-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
