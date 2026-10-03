@@ -22,10 +22,37 @@
       (change)="onImportFileSelected($event)"
     />
     <mat-form-field appearance="outline" [subscriptSizing]="'dynamic'" class="ml-auto w-48">
+      <mat-label>Layer</mat-label>
+      <mat-select
+        [value]="layerStore.activeLayerId()"
+        (valueChange)="layerStore.switchLayer($event)"
+      >
+        @for (layer of layerStore.layers(); track layer.id) {
+          <mat-option [value]="layer.id">{{ layer.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-icon-button
+      (click)="onNewLayer()"
+      aria-label="New layer"
+      matTooltip="New layer"
+    >
+      <span class="material-symbols-rounded">add</span>
+    </button>
+    <button
+      mat-icon-button
+      (click)="onDeleteLayer()"
+      aria-label="Delete layer"
+      matTooltip="Delete layer"
+    >
+      <span class="material-symbols-rounded">delete</span>
+    </button>
+    <mat-form-field appearance="outline" [subscriptSizing]="'dynamic'" class="w-48">
       <mat-label>Device</mat-label>
       <mat-select
-        [value]="deviceStore.deviceType()"
-        (valueChange)="deviceStore.setDeviceType($event)"
+        [value]="layerStore.deviceType()"
+        (valueChange)="layerStore.setDeviceType($event)"
       >
         @for (deviceType of deviceTypes; track deviceType) {
           <mat-option [value]="deviceType">{{
@@ -37,8 +64,8 @@
   </div>
   <div class="min-h-0 flex-1">
     <app-layout
-      [showThumb3Switch]="deviceStore.showThumb3Switch()"
-      [keyLabelMap]="layoutStore.labels()"
+      [showThumb3Switch]="layerStore.showThumb3Switch()"
+      [keyLabelMap]="layerStore.labels()"
       (keyClick)="onKeyClick($event)"
     ></app-layout>
   </div>

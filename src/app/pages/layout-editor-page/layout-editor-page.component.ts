@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { LayoutComponent } from '../../components/layout/layout.component';
 import {
   KeyEditDialogComponent,
@@ -20,8 +21,7 @@ import {
   serializeLayout,
 } from '../../utils/layout-export.utils';
 import { exportSvgAsPngBlob } from '../../utils/svg-export.utils';
-import { LayoutStore } from '../../stores/layout.store';
-import { DeviceStore } from '../../stores/device.store';
+import { LayerStore } from '../../stores/layer.store';
 import { DEVICE_TYPE_LABELS, DEVICE_TYPES } from '../../models/device.models';
 
 const EXPORT_FILE_NAME = 'alhena-layout.json';
@@ -35,6 +35,7 @@ const EXPORT_IMAGE_FILE_NAME = 'alhena-layout.png';
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './layout-editor-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,8 +43,7 @@ const EXPORT_IMAGE_FILE_NAME = 'alhena-layout.png';
 export class LayoutEditorPageComponent {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
-  protected readonly layoutStore = inject(LayoutStore);
-  protected readonly deviceStore = inject(DeviceStore);
+  protected readonly layerStore = inject(LayerStore);
   protected readonly deviceTypes = DEVICE_TYPES;
   protected readonly deviceTypeLabels = DEVICE_TYPE_LABELS;
 
@@ -54,7 +54,7 @@ export class LayoutEditorPageComponent {
     const dialogRef = this.dialog.open(KeyEditDialogComponent, {
       data: {
         positionCode,
-        label: this.layoutStore.labels()[positionCode] ?? null,
+        label: this.layerStore.labels()[positionCode] ?? null,
       },
       width: '360px',
     });
@@ -63,15 +63,15 @@ export class LayoutEditorPageComponent {
         return;
       }
       if (result === null) {
-        this.layoutStore.clearLabel(positionCode);
+        this.layerStore.clearLabel(positionCode);
         return;
       }
-      this.layoutStore.setLabel(positionCode, result);
+      this.layerStore.setLabel(positionCode, result);
     });
   }
 
   onExport() {
-    const file = serializeLayout(this.layoutStore.labels());
+    const file = serializeLayout(this.layerStore.labels());
     const blob = new Blob([JSON.stringify(file, null, 2)], {
       type: 'application/json',
     });
@@ -118,7 +118,7 @@ export class LayoutEditorPageComponent {
       return;
     }
     const hasExistingLabels =
-      Object.keys(this.layoutStore.labels()).length > 0;
+      Object.keys(this.layerStore.labels()).length > 0;
     if (
       hasExistingLabels &&
       !window.confirm(
@@ -131,7 +131,7 @@ export class LayoutEditorPageComponent {
       .text()
       .then((text) => {
         const labels = parseLayoutExportFile(JSON.parse(text));
-        this.layoutStore.loadLabels(labels);
+        this.layerStore.loadLabels(labels);
         this.snackBar.open(
           `Imported ${Object.keys(labels).length} key label(s).`,
           'OK',
@@ -145,5 +145,32 @@ export class LayoutEditorPageComponent {
           { duration: 5000 },
         );
       });
+  }
+
+  onNewLayer() {
+    const name = window.prompt(
+      'New layer name:',
+      `Layer ${this.layerStore.layers().length + 1}`,
+    );
+    if (!name) {
+      return;
+    }
+    this.layerStore.addLayer(name);
+  }
+
+  onDeleteLayer() {
+    const layer = this.layerStore.activeLayer();
+    if (this.layerStore.layers().length <= 1) {
+      this.snackBar.open('Can’t delete the only layer.', 'OK', {
+        duration: 3000,
+      });
+      return;
+    }
+    if (
+      !window.confirm(`Delete layer "${layer.name}"? This can't be undone.`)
+    ) {
+      return;
+    }
+    this.layerStore.deleteLayer(layer.id);
   }
 }
