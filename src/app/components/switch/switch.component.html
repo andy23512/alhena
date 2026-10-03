@@ -15,7 +15,7 @@
   class="fill-transparent stroke-current hover:fill-current hover:opacity-10 cursor-pointer transition-opacity"
   [attr.cx]="center().x"
   [attr.cy]="center().y"
-  [attr.r]="53.68"
+  [attr.r]="centerRadius()"
   [attr.stroke-width]="strokeWidth()"
   (click)="keyClick.emit(positionCodeMap().c)"
 ></svg:circle>
@@ -25,4 +25,6 @@
   [y]="center().y"
   [label]="keyLabelMap()[positionCodeMap().c]"
   [fontSize]="fontSize()"
+  [maxWidth]="centerLabelSize()"
+  [maxHeight]="centerLabelSize()"
 ></svg:g>

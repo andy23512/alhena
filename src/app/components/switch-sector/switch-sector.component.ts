@@ -14,6 +14,13 @@ const o = 8;
 const R1 = 65;
 const R2 = 175;
 
+// Available label box for a sector: width is conservatively based on the
+// chord at the inner radius (the narrowest point of the donut slice, so
+// text never overflows past the inner arc), height is the radial band
+// between R1/R2. Both get a small safety margin.
+const LABEL_MAX_WIDTH = R1 * Math.SQRT2 * 0.85;
+const LABEL_MAX_HEIGHT = (R2 - R1) * 0.85;
+
 @Component({
   selector: '[appSwitchSector]',
   standalone: true,
@@ -92,4 +99,7 @@ export class SwitchSectorComponent {
     const center = this.center();
     return center.y + this.textRadius * sin(d);
   });
+
+  readonly labelMaxWidth = computed(() => LABEL_MAX_WIDTH);
+  readonly labelMaxHeight = computed(() => LABEL_MAX_HEIGHT);
 }

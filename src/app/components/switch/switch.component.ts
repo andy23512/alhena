@@ -10,6 +10,11 @@ import { KeyLabel } from '../../models/key-label.models';
 import { KeyLabelComponent } from '../key-label/key-label.component';
 import { SwitchSectorComponent } from '../switch-sector/switch-sector.component';
 
+// The center/tap target is a circle of this radius; its label box is the
+// largest square that fits inside it, with a small safety margin.
+export const CENTER_RADIUS = 53.68;
+const CENTER_LABEL_SIZE = CENTER_RADIUS * Math.SQRT2 * 0.85;
+
 @Component({
   selector: '[appSwitch]',
   standalone: true,
@@ -35,4 +40,7 @@ export class SwitchComponent {
   readonly r = computed(() => {
     return (this.rotationDirection() === 'cw' ? 1 : -1) * this.rotation();
   });
+
+  readonly centerRadius = computed(() => CENTER_RADIUS);
+  readonly centerLabelSize = computed(() => CENTER_LABEL_SIZE);
 }

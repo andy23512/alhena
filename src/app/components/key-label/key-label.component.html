@@ -1,11 +1,13 @@
-@if (label(); as l) {
-  <svg:text
-    [attr.x]="x()"
-    [attr.y]="y()"
-    dominant-baseline="central"
-    text-anchor="middle"
-    [style.font-size.px]="computedFontSize()"
-    [class.material-symbols-rounded]="l.type === KeyLabelType.Icon"
-    class="fill-current"
-  >{{ l.value }}</svg:text>
+@if (layout(); as l) {
+  @for (line of l.lines; track $index) {
+    <svg:text
+      [attr.x]="x()"
+      [attr.y]="lineY($index, l.lines.length, l.fontSize)"
+      dominant-baseline="central"
+      text-anchor="middle"
+      [style.font-size.px]="l.fontSize"
+      [class.material-symbols-rounded]="l.isIcon"
+      class="fill-current"
+    >{{ line }}</svg:text>
+  }
 }
