@@ -49,9 +49,10 @@ There is no unit test runner configured yet (generated with `--unitTestRunner=no
 
 ## Architecture notes
 
-- `src/app/` — currently just the root `App` component and empty `app.routes.ts`; feature code (layout canvas, key editor, JSON import/export, image export, print) is not implemented yet
-- Sibling project `../alnitak` (also Angular/Nx) renders the same family of CharaChorder device layouts — port its `src/app/components/switch`, `switch-sector`, `layout` drawing logic and `src/app/data`/`src/app/utils` layout data/math as the starting point here, rather than re-deriving the geometry from scratch
-- Planned text-overflow handling for key labels: auto-wrap, then shrink font-size step by step down to a minimum readable size, then truncate with `…` if it still doesn't fit — no hover tooltips, since output must also work for exported images/print
+- `src/app/` — device layout canvas, click-to-edit key editor, and JSON export/import are implemented; image export and print are not implemented yet
+- Sibling project `../alnitak` (also Angular/Nx) renders the same family of CharaChorder device layouts — its `src/app/components/switch`, `switch-sector`, `layout` drawing logic and `src/app/data`/`src/app/utils` layout data/math were ported as the starting point here, simplifying the label data model (`KeyLabel`: `text` | `icon`, see `src/app/models/key-label.models.ts`)
+- `LayoutStore` (`src/app/stores/layout.store.ts`) holds the position-code → `KeyLabel` map as a single signal; no state management library yet — add `@ngrx/signals` only if/when state sharing across routes actually requires it
+- Key labels auto-fit their available space (`src/app/utils/text-fit.utils.ts`): auto-wrap, then shrink font-size step by step down to a minimum readable size, then truncate with `…` if it still doesn't fit. Uses canvas `measureText` (not hover tooltips), so the result is the same in exported images/print as on screen. `SwitchComponent`/`SwitchSectorComponent` compute the actual available label area from the device geometry (inscribed square for the center circle, inner-radius chord × radial band for sectors) and pass it to `KeyLabelComponent` as `maxWidth`/`maxHeight`
 
 ## Gotchas / conventions
 
