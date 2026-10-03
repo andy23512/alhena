@@ -25,10 +25,10 @@ const gridColumns = 10;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
-  // Whether the device has the 3rd thumb switch (CharaChorder Two / CCU /
-  // Master Forge do; CharaChorder One does not). Port note: alnitak reads
-  // this from a device-setting store — alhena doesn't have per-device
-  // settings yet, so it's just an input for now.
+  // Whether the device has the 3rd thumb switch (CharaChorder One / Two /
+  // CCU do; Master Forge does not). Resolved from the chosen device type by
+  // the page component (see DeviceStore), passed down as a plain input so
+  // this component stays decoupled from device selection.
   public showThumb3Switch = input<boolean>(true);
 
   // Labels assigned by the user, keyed by position code (0-89).

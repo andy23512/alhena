@@ -11,9 +11,23 @@
       class="hidden"
       (change)="onImportFileSelected($event)"
     />
+    <mat-form-field appearance="outline" [subscriptSizing]="'dynamic'" class="ml-auto w-48">
+      <mat-label>Device</mat-label>
+      <mat-select
+        [value]="deviceStore.deviceType()"
+        (valueChange)="deviceStore.setDeviceType($event)"
+      >
+        @for (deviceType of deviceTypes; track deviceType) {
+          <mat-option [value]="deviceType">{{
+            deviceTypeLabels[deviceType]
+          }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
   </div>
   <div class="min-h-0 flex-1">
     <app-layout
+      [showThumb3Switch]="deviceStore.showThumb3Switch()"
       [keyLabelMap]="layoutStore.labels()"
       (keyClick)="onKeyClick($event)"
     ></app-layout>

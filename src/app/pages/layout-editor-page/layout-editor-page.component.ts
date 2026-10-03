@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LayoutComponent } from '../../components/layout/layout.component';
 import {
@@ -12,13 +14,20 @@ import {
   serializeLayout,
 } from '../../utils/layout-export.utils';
 import { LayoutStore } from '../../stores/layout.store';
+import { DeviceStore } from '../../stores/device.store';
+import { DEVICE_TYPE_LABELS, DEVICE_TYPES } from '../../models/device.models';
 
 const EXPORT_FILE_NAME = 'alhena-layout.json';
 
 @Component({
   selector: 'app-layout-editor-page',
   standalone: true,
-  imports: [LayoutComponent, MatButtonModule],
+  imports: [
+    LayoutComponent,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
   templateUrl: './layout-editor-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,6 +35,9 @@ export class LayoutEditorPageComponent {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   protected readonly layoutStore = inject(LayoutStore);
+  protected readonly deviceStore = inject(DeviceStore);
+  protected readonly deviceTypes = DEVICE_TYPES;
+  protected readonly deviceTypeLabels = DEVICE_TYPE_LABELS;
 
   onKeyClick(positionCode: number) {
     const dialogRef = this.dialog.open(KeyEditDialogComponent, {
