@@ -105,6 +105,10 @@ export class LayoutEditorPageComponent {
     }
   }
 
+  onPrint() {
+    window.print();
+  }
+
   onImportFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];

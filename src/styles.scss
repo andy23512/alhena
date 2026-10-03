@@ -23,6 +23,14 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+// The device layout is much wider than it is tall, so default the print
+// page to landscape (the browser's print dialog still lets the user
+// override this).
+@page {
+  size: landscape;
+  margin: 10mm;
+}
+
 .material-symbols-rounded {
   font-family: 'Material Symbols Rounded';
   font-weight: normal;
