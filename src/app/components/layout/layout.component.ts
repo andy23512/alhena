@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   computed,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import {
   FingerMap,
@@ -34,6 +36,14 @@ export class LayoutComponent {
   // Labels assigned by the user, keyed by position code (0-89).
   public keyLabelMap = input<Record<number, KeyLabel>>({});
   public keyClick = output<number>();
+
+  private readonly svgRoot =
+    viewChild.required<ElementRef<SVGSVGElement>>('svgRoot');
+
+  /** The rendered `<svg>` element, e.g. for image export. */
+  getSvgElement(): SVGSVGElement {
+    return this.svgRoot().nativeElement;
+  }
 
   public gridRows = computed(() => {
     const showThumb3Switch = this.showThumb3Switch();
