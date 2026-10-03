@@ -5,7 +5,6 @@ An unofficial layout label editor for CharaChorder 3D input devices (CharaChorde
 ## Links
 
 - [Website](https://andy23512.github.io/alhena/)
-- [Alnitak](https://andy23512.github.io/alnitak/) (Companion practice tool for CharaChorder 3D input devices)
 
 ## Features
 
