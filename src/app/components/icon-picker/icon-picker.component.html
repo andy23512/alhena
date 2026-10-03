@@ -9,14 +9,18 @@
 </mat-form-field>
 
 @if (loading()) {
-  <p class="text-sm text-gray-500">Loading icons…</p>
+  <p class="text-sm text-[color:var(--mat-sys-on-surface-variant)]">
+    Loading icons…
+  </p>
 } @else {
   <div class="grid max-h-48 grid-cols-6 gap-1 overflow-y-auto">
     @for (name of visibleMatches(); track name) {
       <button
         type="button"
-        class="flex flex-col items-center justify-center rounded p-1 hover:bg-gray-200"
-        [class.bg-gray-300]="name === selected()"
+        class="flex flex-col items-center justify-center rounded p-1 hover:bg-[color:var(--mat-sys-surface-container-highest)]"
+        [style.background-color]="
+          name === selected() ? 'var(--mat-sys-secondary-container)' : null
+        "
         [title]="name"
         (click)="choose(name)"
       >
@@ -25,9 +29,11 @@
     }
   </div>
   @if (matches().length === 0) {
-    <p class="text-xs text-gray-500">No icons found for "{{ query() }}".</p>
+    <p class="text-xs text-[color:var(--mat-sys-on-surface-variant)]">
+      No icons found for "{{ query() }}".
+    </p>
   } @else if (matches().length > visibleMatches().length) {
-    <p class="text-xs text-gray-500">
+    <p class="text-xs text-[color:var(--mat-sys-on-surface-variant)]">
       Showing {{ visibleMatches().length }} of {{ matches().length }} matches
       — keep typing to narrow it down.
     </p>

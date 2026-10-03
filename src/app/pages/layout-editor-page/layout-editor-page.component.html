@@ -1,5 +1,7 @@
 <div class="flex h-screen w-screen flex-col">
-  <div class="flex items-center gap-2 border-b border-gray-300 p-2 print:hidden">
+  <div
+    class="flex items-center gap-2 border-b border-[color:var(--mat-sys-outline-variant)] p-2 print:hidden"
+  >
     <button mat-stroked-button (click)="onExport()">Export JSON</button>
     <button mat-stroked-button (click)="fileInput.click()">
       Import JSON

@@ -54,6 +54,17 @@ function inlineComputedStyles(source: Element, target: Element) {
   });
 }
 
+// The SVG's strokes/text use `currentColor`, baked in above from whatever
+// the live page's theme resolves it to (e.g. light lines for the current
+// dark theme) — so the canvas background has to match the page's actual
+// background, not a hardcoded white, or the baked-in colors can end up
+// nearly invisible against it.
+function getPageBackgroundColor(): string {
+  const color = getComputedStyle(document.body).backgroundColor;
+  const isTransparent = !color || color === 'rgba(0, 0, 0, 0)' || color === 'transparent';
+  return isTransparent ? '#ffffff' : color;
+}
+
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -74,7 +85,7 @@ export async function exportSvgAsPngBlob(
   svg: SVGSVGElement,
   options: ExportSvgAsPngOptions = {},
 ): Promise<Blob> {
-  const { scale = 2, backgroundColor = '#ffffff' } = options;
+  const { scale = 2, backgroundColor = getPageBackgroundColor() } = options;
 
   const viewBox = svg.viewBox.baseVal;
   const width = viewBox?.width || svg.clientWidth;

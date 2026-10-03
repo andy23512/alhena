@@ -1,14 +1,13 @@
+// The device type only ever affects one thing — whether the 3rd thumb
+// switch is drawn — and CharaChorder One/Two/CCU all share the same
+// answer, so the picker only needs to distinguish those from Master Forge.
 export enum DeviceType {
-  CharaChorderOne = 'charachorder-one',
-  CharaChorderTwo = 'charachorder-two',
-  Ccu = 'ccu',
+  Standard = 'standard',
   MasterForge = 'master-forge',
 }
 
 export const DEVICE_TYPE_LABELS: Record<DeviceType, string> = {
-  [DeviceType.CharaChorderOne]: 'CharaChorder One',
-  [DeviceType.CharaChorderTwo]: 'CharaChorder Two',
-  [DeviceType.Ccu]: 'CCU',
+  [DeviceType.Standard]: 'CharaChorder One / CharaChorder Two / CCU',
   [DeviceType.MasterForge]: 'Master Forge',
 };
 

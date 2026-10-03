@@ -21,7 +21,9 @@
   } @else {
     <app-icon-picker [(selected)]="value"></app-icon-picker>
     @if (value()) {
-      <div class="flex items-center gap-2 text-sm text-gray-600">
+      <div
+        class="flex items-center gap-2 text-sm text-[color:var(--mat-sys-on-surface-variant)]"
+      >
         <span class="material-symbols-rounded text-3xl">{{ value() }}</span>
         <span>{{ value() }}</span>
       </div>

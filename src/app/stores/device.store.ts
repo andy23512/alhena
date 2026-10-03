@@ -8,10 +8,10 @@ import { DeviceType, hasThumb3Switch } from '../models/device.models';
  */
 @Injectable({ providedIn: 'root' })
 export class DeviceStore {
-  readonly deviceType = signal<DeviceType>(DeviceType.CharaChorderTwo);
+  readonly deviceType = signal<DeviceType>(DeviceType.Standard);
 
-  // Whether the current device has the 3rd thumb switch (CharaChorder Two /
-  // CCU / Master Forge do; CharaChorder One does not).
+  // Whether the current device has the 3rd thumb switch (CharaChorder
+  // One/Two/CCU do; Master Forge does not).
   readonly showThumb3Switch = computed(() => hasThumb3Switch(this.deviceType()));
 
   setDeviceType(deviceType: DeviceType) {
