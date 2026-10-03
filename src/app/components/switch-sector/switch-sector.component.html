@@ -1,6 +1,6 @@
 <svg:path
   [attr.d]="sectorPath() + ' Z'"
-  class="fill-transparent stroke-current hover:fill-current hover:opacity-10 cursor-pointer transition-opacity"
+  class="fill-transparent stroke-current hover:fill-current hover:[fill-opacity:0.1] cursor-pointer transition-[fill-opacity]"
   [attr.stroke-width]="strokeWidth()"
   (click)="keyClick.emit(positionCode())"
 />
