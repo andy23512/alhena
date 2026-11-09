@@ -35,6 +35,8 @@ export class LayoutComponent {
 
   // Labels assigned by the user, keyed by position code (0-89).
   public keyLabelMap = input<Record<number, KeyLabel>>({});
+  /** Position codes to outline as selected (multi-select mode). */
+  public selectedKeys = input<ReadonlySet<number>>(new Set());
   public keyClick = output<number>();
 
   private readonly svgRoot =

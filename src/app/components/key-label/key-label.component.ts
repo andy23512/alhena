@@ -35,7 +35,7 @@ export class KeyLabelComponent {
   // the result also needs to work for exported images/print.
   readonly layout = computed<LabelLayout | null>(() => {
     const label = this.label();
-    if (!label) {
+    if (!label || !label.value) {
       return null;
     }
     const maxFontSize = this.fontSize();

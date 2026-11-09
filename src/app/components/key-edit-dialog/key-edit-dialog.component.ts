@@ -9,7 +9,14 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { IconPickerComponent } from '../icon-picker/icon-picker.component';
-import { KeyLabel, KeyLabelType } from '../../models/key-label.models';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  KEY_COLORS,
+  KEY_COLOR_NAMES,
+  KeyColor,
+  KeyLabel,
+  KeyLabelType,
+} from '../../models/key-label.models';
 
 export interface KeyEditDialogData {
   positionCode: number;
@@ -31,6 +38,7 @@ export type KeyEditDialogResult = KeyLabel | null | undefined;
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatCheckboxModule,
     IconPickerComponent,
   ],
   templateUrl: './key-edit-dialog.component.html',
@@ -43,9 +51,14 @@ export class KeyEditDialogComponent {
     );
   readonly data = inject<KeyEditDialogData>(MAT_DIALOG_DATA);
   readonly KeyLabelType = KeyLabelType;
+  readonly keyColors = KEY_COLORS;
+  readonly keyColorNames = KEY_COLOR_NAMES;
 
   readonly type = signal<KeyLabelType>(this.data.label?.type ?? KeyLabelType.Text);
   readonly value = signal(this.data.label?.value ?? '');
+
+  readonly color = signal<KeyColor | undefined>(this.data.label?.color);
+  readonly dimmed = signal(this.data.label?.dimmed ?? false);
 
   onValueInput(event: Event) {
     this.value.set((event.target as HTMLInputElement).value);
@@ -53,11 +66,20 @@ export class KeyEditDialogComponent {
 
   save() {
     const value = this.value().trim();
-    if (!value) {
+    const color = this.color();
+    const dimmed = this.dimmed();
+    if (!value && !color && !dimmed) {
       this.dialogRef.close(null);
       return;
     }
-    this.dialogRef.close({ type: this.type(), value });
+    const label: KeyLabel = { type: this.type(), value };
+    if (color) {
+      label.color = color;
+    }
+    if (dimmed) {
+      label.dimmed = true;
+    }
+    this.dialogRef.close(label);
   }
 
   clear() {

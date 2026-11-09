@@ -99,6 +99,8 @@ export async function exportSvgAsPngBlob(
   clone.setAttribute('width', String(width));
   clone.setAttribute('height', String(height));
   inlineComputedStyles(svg, clone);
+  // Editor-only overlays (e.g. multi-select outlines) don't belong in the image.
+  clone.querySelectorAll('[data-export-ignore]').forEach((el) => el.remove());
 
   const fontDataUrl = await getMaterialSymbolsFontDataUrl();
   if (fontDataUrl) {

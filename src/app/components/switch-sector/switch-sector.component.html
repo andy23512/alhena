@@ -1,15 +1,35 @@
-<svg:path
-  [attr.d]="sectorPath() + ' Z'"
-  class="fill-transparent stroke-current hover:fill-current hover:[fill-opacity:0.1] cursor-pointer transition-[fill-opacity]"
-  [attr.stroke-width]="strokeWidth()"
-  (click)="keyClick.emit(positionCode())"
-/>
-<svg:g
-  appKeyLabel
-  [x]="textX()"
-  [y]="textY()"
-  [fontSize]="fontSize()"
-  [maxWidth]="labelMaxWidth()"
-  [maxHeight]="labelMaxHeight()"
-  [label]="label()"
-></svg:g>
+<svg:g [style.opacity]="opacity()">
+  @if (fillColor(); as fill) {
+    <svg:path
+      [attr.d]="sectorPath() + ' Z'"
+      [attr.fill]="fill"
+      pointer-events="none"
+    />
+  }
+  <svg:path
+    [attr.d]="sectorPath() + ' Z'"
+    class="fill-transparent stroke-current hover:fill-current hover:[fill-opacity:0.1] cursor-pointer transition-[fill-opacity]"
+    [attr.stroke-width]="strokeWidth()"
+    (click)="keyClick.emit(positionCode())"
+  />
+  <svg:g
+    appKeyLabel
+    [style.color]="fillColor() ? '#000' : null"
+    [x]="textX()"
+    [y]="textY()"
+    [fontSize]="fontSize()"
+    [maxWidth]="labelMaxWidth()"
+    [maxHeight]="labelMaxHeight()"
+    [label]="label()"
+  ></svg:g>
+</svg:g>
+@if (selected()) {
+  <svg:path
+    data-export-ignore
+    [attr.d]="sectorPath() + ' Z'"
+    class="fill-none stroke-[#ff9800] print:hidden"
+    [attr.stroke-width]="strokeWidth() * 3"
+    stroke-dasharray="14 8"
+    pointer-events="none"
+  />
+}

@@ -14,6 +14,15 @@
       {{ exportingImage() ? 'Saving…' : 'Save Image' }}
     </button>
     <button mat-stroked-button (click)="onPrint()">Print</button>
+    @if (multiSelect()) {
+      <button mat-flat-button (click)="toggleMultiSelect()">
+        Done selecting
+      </button>
+    } @else {
+      <button mat-stroked-button (click)="toggleMultiSelect()">
+        Multi-select
+      </button>
+    }
     <input
       #fileInput
       type="file"
@@ -62,10 +71,45 @@
       </mat-select>
     </mat-form-field>
   </div>
+  @if (multiSelect()) {
+    <div
+      class="flex flex-wrap items-center gap-2 border-b border-[color:var(--mat-sys-outline-variant)] p-2 print:hidden"
+    >
+      <span class="text-sm">{{ selectedKeys().size }} selected</span>
+      <button mat-button (click)="selectUnlabeled()">Select unlabeled</button>
+      <button mat-button (click)="invertSelection()">Invert</button>
+      <button mat-button (click)="clearSelection()">Clear selection</button>
+      <span class="mx-2 h-6 border-l border-[color:var(--mat-sys-outline-variant)]"></span>
+      <span class="text-sm">Color:</span>
+      <button
+        type="button"
+        class="h-7 w-7 rounded-full border-2 border-dashed border-gray-400 text-xs disabled:opacity-40"
+        aria-label="Remove color"
+        matTooltip="Remove color"
+        [disabled]="selectedKeys().size === 0"
+        (click)="applyColor(undefined)"
+      >✕</button>
+      @for (name of keyColorNames; track name) {
+        <button
+          type="button"
+          class="h-7 w-7 rounded-full border border-gray-400 disabled:opacity-40"
+          [style.background-color]="keyColors[name]"
+          [attr.aria-label]="'Apply ' + name"
+          [matTooltip]="name"
+          [disabled]="selectedKeys().size === 0"
+          (click)="applyColor(name)"
+        ></button>
+      }
+      <span class="mx-2 h-6 border-l border-[color:var(--mat-sys-outline-variant)]"></span>
+      <button mat-button [disabled]="selectedKeys().size === 0" (click)="applyDimmed(true)">Dim</button>
+      <button mat-button [disabled]="selectedKeys().size === 0" (click)="applyDimmed(false)">Undim</button>
+    </div>
+  }
   <div class="min-h-0 flex-1">
     <app-layout
       [showThumb3Switch]="layerStore.showThumb3Switch()"
       [keyLabelMap]="layerStore.labels()"
+      [selectedKeys]="selectedKeys()"
       (keyClick)="onKeyClick($event)"
     ></app-layout>
   </div>

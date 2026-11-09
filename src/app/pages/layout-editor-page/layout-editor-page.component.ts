@@ -5,6 +5,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { POSITION_CODE_LAYOUT } from 'tangent-cc-lib';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,6 +22,12 @@ import {
   serializeLayout,
 } from '../../utils/layout-export.utils';
 import { exportSvgAsPngBlob } from '../../utils/svg-export.utils';
+import {
+  KEY_COLORS,
+  KEY_COLOR_NAMES,
+  KeyColor,
+  KeyLabel,
+} from '../../models/key-label.models';
 import { LayerStore } from '../../stores/layer.store';
 import { DEVICE_TYPE_LABELS, DEVICE_TYPES } from '../../models/device.models';
 
@@ -50,7 +57,75 @@ export class LayoutEditorPageComponent {
   private readonly layout = viewChild.required(LayoutComponent);
   protected readonly exportingImage = signal(false);
 
+  protected readonly multiSelect = signal(false);
+  protected readonly selectedKeys = signal<ReadonlySet<number>>(new Set());
+  protected readonly keyColors = KEY_COLORS;
+  protected readonly keyColorNames = KEY_COLOR_NAMES;
+
+  protected toggleMultiSelect() {
+    this.multiSelect.update((on) => !on);
+    this.selectedKeys.set(new Set());
+  }
+
+  protected clearSelection() {
+    this.selectedKeys.set(new Set());
+  }
+
+  /** Position codes of the keys actually drawn for the current device. */
+  private visibleKeyCodes(): number[] {
+    const showThumb3 = this.layerStore.showThumb3Switch();
+    const codes: number[] = [];
+    for (const side of Object.values(POSITION_CODE_LAYOUT)) {
+      for (const [sw, map] of Object.entries(side)) {
+        if (sw === 'thumbEnd' && !showThumb3) {
+          continue;
+        }
+        codes.push(...Object.values(map as Record<string, number>));
+      }
+    }
+    return codes;
+  }
+
+  /** Replaces the selection with every visible key matching `predicate`. */
+  protected selectKeysWhere(
+    predicate: (label: KeyLabel | undefined, code: number) => boolean,
+  ) {
+    const labels = this.layerStore.labels();
+    this.selectedKeys.set(
+      new Set(
+        this.visibleKeyCodes().filter((code) => predicate(labels[code], code)),
+      ),
+    );
+  }
+
+  protected selectUnlabeled() {
+    this.selectKeysWhere((label) => !label || !label.value);
+  }
+
+  protected invertSelection() {
+    const current = this.selectedKeys();
+    this.selectKeysWhere((_label, code) => !current.has(code));
+  }
+
+  protected applyColor(color: KeyColor | undefined) {
+    this.layerStore.setColorForKeys(this.selectedKeys(), color);
+  }
+
+  protected applyDimmed(dimmed: boolean) {
+    this.layerStore.setDimmedForKeys(this.selectedKeys(), dimmed);
+  }
+
   onKeyClick(positionCode: number) {
+    if (this.multiSelect()) {
+      this.selectedKeys.update((keys) => {
+        const next = new Set(keys);
+        if (!next.delete(positionCode)) {
+          next.add(positionCode);
+        }
+        return next;
+      });
+      return;
+    }
     const dialogRef = this.dialog.open(KeyEditDialogComponent, {
       data: {
         positionCode,

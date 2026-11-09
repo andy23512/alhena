@@ -1,6 +1,6 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 import { DeviceType, hasThumb3Switch } from '../models/device.models';
-import { KeyLabel } from '../models/key-label.models';
+import { KeyColor, KeyLabel, KeyLabelType } from '../models/key-label.models';
 import { Layer, createLayer } from '../models/layer.models';
 import {
   ACTIVE_LAYER_ID_KEY,
@@ -112,6 +112,57 @@ export class LayerStore {
       ...layer,
       labels: { ...layer.labels, [positionCode]: label },
     }));
+  }
+
+  /**
+   * Sets (or, with `undefined`, removes) the fill color on every given key.
+   * Keys without a label get an empty text label carrying just the color.
+   */
+  setColorForKeys(positionCodes: Iterable<number>, color: KeyColor | undefined) {
+    this.patchKeys(positionCodes, (label) => {
+      const next = { ...label };
+      if (color) {
+        next.color = color;
+      } else {
+        delete next.color;
+      }
+      return next;
+    });
+  }
+
+  /** Dims (or un-dims) every given key. */
+  setDimmedForKeys(positionCodes: Iterable<number>, dimmed: boolean) {
+    this.patchKeys(positionCodes, (label) => {
+      const next = { ...label };
+      if (dimmed) {
+        next.dimmed = true;
+      } else {
+        delete next.dimmed;
+      }
+      return next;
+    });
+  }
+
+  private patchKeys(
+    positionCodes: Iterable<number>,
+    patch: (label: KeyLabel) => KeyLabel,
+  ) {
+    const codes = [...positionCodes];
+    this.updateLayer(this.activeLayerId(), (layer) => {
+      const labels = { ...layer.labels };
+      for (const code of codes) {
+        const next = patch(
+          labels[code] ?? { type: KeyLabelType.Text, value: '' },
+        );
+        // A label with no text, color or dimming carries no information.
+        if (!next.value && !next.color && !next.dimmed) {
+          delete labels[code];
+        } else {
+          labels[code] = next;
+        }
+      }
+      return { ...layer, labels };
+    });
   }
 
   clearLabel(positionCode: number) {

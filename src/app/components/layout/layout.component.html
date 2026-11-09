@@ -17,6 +17,7 @@
             : -nonThumbRotationAngle()
         "
         [keyLabelMap]="keyLabelMap()"
+        [selectedKeys]="selectedKeys()"
         [positionCodeMap]="positionCodeLayout[side][sw]"
         (keyClick)="keyClick.emit($event)"
       ></g>

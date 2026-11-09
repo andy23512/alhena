@@ -6,7 +6,11 @@ import {
   output,
 } from '@angular/core';
 import { cos, sin } from '../../utils/math.utils';
-import { KeyLabel } from '../../models/key-label.models';
+import {
+  DIMMED_OPACITY,
+  KEY_COLORS,
+  KeyLabel,
+} from '../../models/key-label.models';
 import { KeyLabelComponent } from '../key-label/key-label.component';
 
 // Radii/gap tuned to match the device layout drawing ported from alnitak.
@@ -36,6 +40,7 @@ export class SwitchSectorComponent {
   readonly fontSize = input<number>(80);
   readonly label = input<KeyLabel | null>(null);
   readonly positionCode = input.required<number>();
+  readonly selected = input<boolean>(false);
   readonly keyClick = output<number>();
 
   readonly r1 = computed(() => {
@@ -99,6 +104,14 @@ export class SwitchSectorComponent {
     const center = this.center();
     return center.y + this.textRadius * sin(d);
   });
+
+  readonly fillColor = computed(() => {
+    const color = this.label()?.color;
+    return color ? KEY_COLORS[color] : null;
+  });
+  readonly opacity = computed(() =>
+    this.label()?.dimmed ? DIMMED_OPACITY : null,
+  );
 
   readonly labelMaxWidth = computed(() => LABEL_MAX_WIDTH);
   readonly labelMaxHeight = computed(() => LABEL_MAX_HEIGHT);

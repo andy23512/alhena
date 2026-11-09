@@ -1,4 +1,4 @@
-import { KeyLabel, KeyLabelType } from '../models/key-label.models';
+import { KeyLabel, KeyLabelType, isKeyColor } from '../models/key-label.models';
 import {
   LAYOUT_EXPORT_VERSION,
   LayoutExportFile,
@@ -59,9 +59,16 @@ export function isKeyLabel(value: unknown): value is KeyLabel {
   if (!value || typeof value !== 'object') {
     return false;
   }
-  const { type, value: labelValue } = value as Record<string, unknown>;
+  const {
+    type,
+    value: labelValue,
+    color,
+    dimmed,
+  } = value as Record<string, unknown>;
   return (
     (type === KeyLabelType.Text || type === KeyLabelType.Icon) &&
-    typeof labelValue === 'string'
+    typeof labelValue === 'string' &&
+    (color === undefined || isKeyColor(color)) &&
+    (dimmed === undefined || typeof dimmed === 'boolean')
   );
 }

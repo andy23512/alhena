@@ -6,7 +6,11 @@ import {
   output,
 } from '@angular/core';
 import { DirectionMap } from 'tangent-cc-lib';
-import { KeyLabel } from '../../models/key-label.models';
+import {
+  DIMMED_OPACITY,
+  KEY_COLORS,
+  KeyLabel,
+} from '../../models/key-label.models';
 import { KeyLabelComponent } from '../key-label/key-label.component';
 import { SwitchSectorComponent } from '../switch-sector/switch-sector.component';
 
@@ -36,10 +40,19 @@ export class SwitchComponent {
   ];
   readonly positionCodeMap = input.required<DirectionMap<number>>();
   readonly keyLabelMap = input<Record<number, KeyLabel>>({});
+  readonly selectedKeys = input<ReadonlySet<number>>(new Set());
   readonly keyClick = output<number>();
   readonly r = computed(() => {
     return (this.rotationDirection() === 'cw' ? 1 : -1) * this.rotation();
   });
+
+  readonly centerFill = computed(() => {
+    const color = this.keyLabelMap()[this.positionCodeMap().c]?.color;
+    return color ? KEY_COLORS[color] : null;
+  });
+  readonly centerOpacity = computed(() =>
+    this.keyLabelMap()[this.positionCodeMap().c]?.dimmed ? DIMMED_OPACITY : null,
+  );
 
   readonly centerRadius = computed(() => CENTER_RADIUS);
   readonly centerLabelSize = computed(() => CENTER_LABEL_SIZE);

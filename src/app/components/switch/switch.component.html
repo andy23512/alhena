@@ -6,25 +6,50 @@
     [direction]="rotationDirection()"
     [label]="keyLabelMap()[positionCodeMap()[sector.direction]]"
     [positionCode]="positionCodeMap()[sector.direction]"
+    [selected]="selectedKeys().has(positionCodeMap()[sector.direction])"
     [strokeWidth]="strokeWidth()"
     [fontSize]="fontSize()"
     (keyClick)="keyClick.emit($event)"
   ></svg:g>
 }
-<svg:circle
-  class="fill-transparent stroke-current hover:fill-current hover:[fill-opacity:0.1] cursor-pointer transition-[fill-opacity]"
-  [attr.cx]="center().x"
-  [attr.cy]="center().y"
-  [attr.r]="centerRadius()"
-  [attr.stroke-width]="strokeWidth()"
-  (click)="keyClick.emit(positionCodeMap().c)"
-></svg:circle>
-<svg:g
-  appKeyLabel
-  [x]="center().x"
-  [y]="center().y"
-  [label]="keyLabelMap()[positionCodeMap().c]"
-  [fontSize]="fontSize()"
-  [maxWidth]="centerLabelSize()"
-  [maxHeight]="centerLabelSize()"
-></svg:g>
+<svg:g [style.opacity]="centerOpacity()">
+  @if (centerFill(); as fill) {
+    <svg:circle
+      [attr.cx]="center().x"
+      [attr.cy]="center().y"
+      [attr.r]="centerRadius()"
+      [attr.fill]="fill"
+      pointer-events="none"
+    ></svg:circle>
+  }
+  <svg:circle
+    class="fill-transparent stroke-current hover:fill-current hover:[fill-opacity:0.1] cursor-pointer transition-[fill-opacity]"
+    [attr.cx]="center().x"
+    [attr.cy]="center().y"
+    [attr.r]="centerRadius()"
+    [attr.stroke-width]="strokeWidth()"
+    (click)="keyClick.emit(positionCodeMap().c)"
+  ></svg:circle>
+  <svg:g
+    appKeyLabel
+    [style.color]="centerFill() ? '#000' : null"
+    [x]="center().x"
+    [y]="center().y"
+    [label]="keyLabelMap()[positionCodeMap().c]"
+    [fontSize]="fontSize()"
+    [maxWidth]="centerLabelSize()"
+    [maxHeight]="centerLabelSize()"
+  ></svg:g>
+</svg:g>
+@if (selectedKeys().has(positionCodeMap().c)) {
+  <svg:circle
+    data-export-ignore
+    class="fill-none stroke-[#ff9800] print:hidden"
+    [attr.cx]="center().x"
+    [attr.cy]="center().y"
+    [attr.r]="centerRadius()"
+    [attr.stroke-width]="strokeWidth() * 3"
+    stroke-dasharray="14 8"
+    pointer-events="none"
+  ></svg:circle>
+}
