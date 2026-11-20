@@ -26,7 +26,9 @@ export class IconPickerComponent {
   /** Two-way bound: the currently chosen (or typed) icon name. */
   readonly selected = model<string>('');
 
-  protected readonly query = signal(this.selected());
+  // The search box always shows the chosen (or typed) name, including one
+  // that was already chosen when the picker opened.
+  protected readonly query = computed(() => this.selected());
   protected readonly loading = signal(true);
   private readonly allNames = signal<readonly string[]>([]);
 
@@ -51,12 +53,10 @@ export class IconPickerComponent {
 
   onQueryInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-    this.query.set(value);
     this.selected.set(value);
   }
 
   choose(name: string) {
-    this.query.set(name);
     this.selected.set(name);
   }
 }

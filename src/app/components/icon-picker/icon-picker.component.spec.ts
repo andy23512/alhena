@@ -140,16 +140,26 @@ describe('IconPickerComponent', () => {
       expect(marked[0].title).toBe(MATERIAL_SYMBOLS_ICON_NAMES[2]);
     });
 
-    // Current behavior, probably not meant: the search box is filled from the
-    // value the picker has when it is created, which is before the parent's
-    // binding arrives, so editing a key that already has an icon opens with an
-    // empty search box and the first 60 icons, not with that icon.
-    it('opens with an empty search box even when an icon is already chosen (known gap)', async () => {
+    it('opens with the icon that is already chosen, in the search box and marked in the list', async () => {
       await create('home');
       await loaded();
-      expect(host.selected()).toBe('home');
-      expect(input().value).toBe('');
-      expect(names()).toEqual(MATERIAL_SYMBOLS_ICON_NAMES.slice(0, 60));
+      expect(input().value).toBe('home');
+      expect(names()).toEqual(
+        MATERIAL_SYMBOLS_ICON_NAMES.filter((n) => n.includes('home')).slice(
+          0,
+          60,
+        ),
+      );
+      const marked = buttons().filter((b) => b.style.backgroundColor !== '');
+      expect(marked.map((b) => b.title)).toEqual(['home']);
+    });
+
+    it('follows the parent when it changes the chosen icon', async () => {
+      await create();
+      await loaded();
+      host.selected.set('star');
+      fixture.detectChanges();
+      expect(input().value).toBe('star');
     });
 
     it('passes on what is typed, even when it is not an icon', async () => {

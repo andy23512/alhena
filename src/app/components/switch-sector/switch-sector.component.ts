@@ -92,17 +92,17 @@ export class SwitchSectorComponent {
     }
   });
 
-  readonly textRadius = (this.r1() + this.r2()) / 2;
+  readonly textRadius = computed(() => (this.r1() + this.r2()) / 2);
 
   readonly textX = computed(() => {
     const d = this.degree();
     const center = this.center();
-    return center.x + this.textRadius * cos(d);
+    return center.x + this.textRadius() * cos(d);
   });
   readonly textY = computed(() => {
     const d = this.degree();
     const center = this.center();
-    return center.y + this.textRadius * sin(d);
+    return center.y + this.textRadius() * sin(d);
   });
 
   readonly fillColor = computed(() => {

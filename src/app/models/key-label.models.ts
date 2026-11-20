@@ -19,7 +19,10 @@ export type KeyColor = keyof typeof KEY_COLORS;
 export const KEY_COLOR_NAMES = Object.keys(KEY_COLORS) as KeyColor[];
 
 export function isKeyColor(value: unknown): value is KeyColor {
-  return typeof value === 'string' && value in KEY_COLORS;
+  return (
+    typeof value === 'string' &&
+    Object.prototype.hasOwnProperty.call(KEY_COLORS, value)
+  );
 }
 
 /** Opacity applied to the whole key (fill, stroke, label) when `dimmed`. */

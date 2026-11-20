@@ -36,12 +36,17 @@ describe('key label models', () => {
     expect(isKeyColor({})).toBeFalse();
   });
 
-  // Current behavior, not wanted: `isKeyColor` uses `in`, so names that
-  // every object inherits count as colors. An imported file could carry
-  // `"color": "toString"`, and the key would be drawn with an undefined fill.
-  it('takes names from the object prototype as colors (known gap)', () => {
-    expect(isKeyColor('toString')).toBeTrue();
-    expect(isKeyColor('constructor')).toBeTrue();
+  // Names every object inherits are not colors; an imported file carrying
+  // `"color": "toString"` would otherwise draw the key with an undefined fill.
+  it('does not take names from the object prototype as colors', () => {
+    for (const name of [
+      'toString',
+      'constructor',
+      'hasOwnProperty',
+      '__proto__',
+    ]) {
+      expect(isKeyColor(name)).withContext(name).toBeFalse();
+    }
   });
 
   it('fades a dimmed key to 35%', () => {

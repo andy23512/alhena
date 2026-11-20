@@ -44,7 +44,12 @@ export function parseLabels(data: unknown): Record<number, KeyLabel> {
   const result: Record<number, KeyLabel> = {};
   for (const [key, value] of Object.entries(data)) {
     const positionCode = Number(key);
-    if (!Number.isInteger(positionCode) || positionCode < 0 || positionCode > 89) {
+    if (
+      !/^\d+$/.test(key) ||
+      !Number.isInteger(positionCode) ||
+      positionCode < 0 ||
+      positionCode > 89
+    ) {
       throw new Error(`Invalid position code: "${key}".`);
     }
     if (!isKeyLabel(value)) {

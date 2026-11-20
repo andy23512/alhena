@@ -113,10 +113,20 @@ describe('parseLabels', () => {
     }
   });
 
-  // Current behavior, not wanted: the key is turned into a number first, so
-  // an empty (or blank) key reads as position 0.
-  it('reads an empty key as position 0 (known gap)', () => {
-    expect(parseLabels({ '': TEXT })).toEqual({ 0: TEXT });
+  it('refuses an empty or blank key instead of reading it as position 0', () => {
+    for (const key of ['', ' ', '  ']) {
+      expect(() => parseLabels({ [key]: TEXT }))
+        .withContext(JSON.stringify(key))
+        .toThrowError(`Invalid position code: "${key}".`);
+    }
+  });
+
+  it('refuses keys that only look like numbers once converted', () => {
+    for (const key of ['1e1', '0x5', ' 5', '5 ', '+5']) {
+      expect(() => parseLabels({ [key]: TEXT }))
+        .withContext(key)
+        .toThrowError();
+    }
   });
 
   it('refuses a bad label, naming its code', () => {

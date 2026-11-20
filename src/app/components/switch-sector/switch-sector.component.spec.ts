@@ -201,21 +201,22 @@ describe('SwitchSectorComponent', () => {
   });
 
   describe('label', () => {
-    // Current behavior, probably not meant: the radius the label sits at is
-    // worked out once, when the component is created, from the default line
-    // width of 1 (so (65 + 174) / 2), and does not follow the strokeWidth input.
+    // Halfway between the inner circle (65) and the outer one (175 minus the
+    // line width): with a line width of 1 that is (65 + 174) / 2.
     it('is drawn halfway between the circles, along the direction', () => {
-      render({ degree: 90 });
+      render({ degree: 90, strokeWidth: 1 });
       expect(sector().textX()).toBeCloseTo(500, 6);
       expect(sector().textY()).toBeCloseTo(400 + 119.5, 6);
-      render({ degree: 0 });
+      render({ degree: 0, strokeWidth: 1 });
       expect(sector().textX()).toBeCloseTo(500 + 119.5, 6);
       expect(sector().textY()).toBeCloseTo(400, 6);
     });
 
-    it('stays at that radius when the line width is different (known quirk)', () => {
+    it('follows the line width, since the outer circle moves in with it', () => {
       render({ degree: 90, strokeWidth: 20 });
-      expect(sector().textY()).toBeCloseTo(400 + 119.5, 6);
+      expect(sector().textY()).toBeCloseTo(400 + (65 + 155) / 2, 6);
+      render({ degree: 90, strokeWidth: 0 });
+      expect(sector().textY()).toBeCloseTo(400 + (65 + 175) / 2, 6);
     });
 
     it('gets a box that fits inside the slice', () => {
