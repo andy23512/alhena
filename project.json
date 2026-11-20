@@ -84,6 +84,22 @@
         "email": "andy23512@gmail.com",
         "dir": "dist/alhena/browser"
       }
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "tsConfig": "tsconfig.spec.json",
+        "polyfills": [],
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "public"
+          }
+        ],
+        "styles": ["./src/styles.scss"],
+        "watch": false
+      }
     }
   }
 }
