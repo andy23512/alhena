@@ -1,5 +1,7 @@
 # Alhena
 
+[![CI](https://github.com/andy23512/alhena/actions/workflows/ci.yml/badge.svg)](https://github.com/andy23512/alhena/actions/workflows/ci.yml)
+
 An unofficial layout label editor for CharaChorder 3D input devices (CharaChorder One, CharaChorder Two, CCU and Master Forge).
 
 ## Links
